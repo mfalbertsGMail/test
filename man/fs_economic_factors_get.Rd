@@ -17,7 +17,7 @@ fs_economic_factors_get(connectionString, fs_id, transformation_sequence_order,
 \item{criteria_sequence_order}{Way to identify the the criteria entry to get the characteristics from}
 }
 \value{
-Data frame containing the financial instrument data
+Data frame containing the financial instrument data.
 }
 \description{
 Takes a connection string (connectionString) and scenario id (fs_id) and returns a datatable
