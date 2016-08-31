@@ -37,7 +37,7 @@ fi_instrument_get <- function(connectionString, fs_id) {
 #' @param fs_id The scenario ID
 #' @param transformation_sequence_order Way to identify the the transformation entry to get the criteria from 
 #' @param criteria_sequence_order Way to identify the the criteria entry to get the characteristics from 
-#' @return Data frame containing the financial instrument data..
+#' @return Data frame containing the financial instrument data.
 #' @import RODBC
 #' @import reshape2
 #' @export
