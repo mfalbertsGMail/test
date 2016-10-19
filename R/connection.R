@@ -1,36 +1,48 @@
-#' Create the connection object used for all the database functions
-#' 
-#' Takes a connection string and returns a connection object
-#' @param connectionString  - the string representing the connection string...
-#' @return The connection object
-#' @import RODBC
-#' @export
 
-connection <- function(connectionString){
-  return(odbcDriverConnect(connectionString))
+#' Initalizes the financial instrument records - must be done on scenarios
+#' that have not been run
+#' 
+#' Takes a connection string (connectionString) and scenario id (fs_id) and 
+#' initializes the financial instruments on the server.  This *should* not 
+#' be executed on a scenario that has already been run as it will wipe out the
+#' snapshot. 
+#'  
+#' @param connectionString  The string representing the connection string...
+#' @param fs_id The scenario ID
+#' @return Data frame containing the financial instrument data
+#' @import RODBC
+
+fi_instrument_init_nc <- function(connectionString, fs_id) {
+  cn <- odbcDriverConnect(connectionString)
+  if (is.null(fs_id) == FALSE) {
+    # may want to put this into a seperate 'init' routine.
+    sp <- paste("EXEC [app].[FI_Financial_Instrument_Property_load] @fs_id = ", fs_id)
+    sqlQuery(cn, sp, errors=TRUE)
+  }
+  odbcClose(cn)
 }
 
 #' Get fincancial instruments for a specific screnario ID and 
 #' 
 #' Takes a connection string (connectionString) and scenario id (fs_id) and returns a datatable
 #' with the instruments
-#' @param connectionString  - the string representing the connection string...
+#' @param connectionString  The string representing the connection string...
 #' @param fs_id The scenario ID
 #' @return Data frame containing the financial instrument data
 #' @import RODBC
 #' @export
 
-fi_instrument_get <- function(connectionString, fs_id) {
-  conn <- odbcDriverConnect(connectionString)
+fi_instrument_get_nc <- function(connectionString, fs_id) {
   cn <- odbcDriverConnect(connectionString)
+  # note: this will not return anything if the scenario has not been run or fi_instruments_init_nc has not been called
   sp <- paste("EXEC [app].[FI_Financial_Instrument_get] @fs_id = ", ifelse(is.null(fs_id), "NULL", fs_id))
   data <- sqlQuery(cn, sp, errors=TRUE)
-  odbcCloseAll()
+  odbcClose(cn)
   return(data)
 }
   
-#' Get economic factor schedules for the specified connection string, scenario and transformation (by sequence order)
-#' 
+#' Gets Capital assumptions schedules for the specified connection string, scenario and transformation (by sequence order)
+#' TODO: make this work on Description rather than transformation sequence! 
 #' Takes a connection string (connectionString) and scenario id (fs_id) and returns a datatable
 #' with the instruments
 #' @param connectionString  - the string representing the connection string...
@@ -42,14 +54,13 @@ fi_instrument_get <- function(connectionString, fs_id) {
 #' @import reshape2
 #' @export
 #' 
-fs_economic_factors_get <- function(connectionString, fs_id, transformation_sequence_order, criteria_squence_order) {
-  conn <- odbcDriverConnect(connectionString)
+fs_economic_factors_get_nc <- function(connectionString, fs_id, transformation_sequence_order, criteria_squence_order) {
   cn <- odbcDriverConnect(connectionString)
   # make this a SP when done testing
-  sp <- paste("SELECT property_code, period, rate FROM app.tf_capital_schedule_history(", fs_id, ",", transformation_sequence_order, ",", criteria_squence_order,  ") WHERE DATE IS NULL ORDER BY property_code, period")
+  sp <- paste("SELECT property_code, period, value FROM app.tf_capital_schedule_history(", fs_id, ",", transformation_sequence_order, ",", criteria_squence_order,  ") WHERE DATE IS NULL ORDER BY property_code, period")
   data <- sqlQuery(cn, sp, errors=TRUE)
   # reshape so rather than rows of data it is by period in the column
-  data <- reshape2::dcast(data, property_code ~period, value.var = 'rate')
-  odbcCloseAll()
+  data <- reshape2::dcast(data, property_code ~period, value.var = 'value')
+  odbcClose(cn)
   return(data)
 }
