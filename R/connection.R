@@ -16,7 +16,7 @@ fi_instrument_init_nc <- function(connectionString, fs_id) {
   cn <- odbcDriverConnect(connectionString)
   if (is.null(fs_id) == FALSE) {
     # may want to put this into a seperate 'init' routine.
-    sp <- paste("EXEC [app].[FI_Financial_Instrument_Property_load] @fs_id = ", fs_id)
+    sp <- paste("EXEC [app_r].[FI_Financial_Instrument_Property_load] @fs_id = ", fs_id)
     sqlQuery(cn, sp, errors=TRUE)
   }
   odbcClose(cn)
@@ -35,7 +35,7 @@ fi_instrument_init_nc <- function(connectionString, fs_id) {
 fi_instrument_get_nc <- function(connectionString, fs_id) {
   cn <- odbcDriverConnect(connectionString)
   # note: this will not return anything if the scenario has not been run or fi_instruments_init_nc has not been called
-  sp <- paste("EXEC [app].[FI_Financial_Instrument_get] @fs_id = ", ifelse(is.null(fs_id), "NULL", fs_id))
+  sp <- paste("EXEC [app_r].[FI_Financial_Instrument_get] @fs_id = ", ifelse(is.null(fs_id), "NULL", fs_id))
   data <- sqlQuery(cn, sp, errors=TRUE)
   odbcClose(cn)
   return(data)
