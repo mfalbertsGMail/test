@@ -1,9 +1,9 @@
-Package: Solvas.Caplital.SQLUtility
+Package: Solvas.Capital.SQLUtility
 Title: Provide database utilities for
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: person("Mark","Alberts", email="malberts@deloitte.com", role=c("aut","cre"))
 Description: Provides database utilities for reading and writing to the database
-    when developing RModel for Solvas Capital.
+    use for developing R Models for Solvas|Capital.
 Depends:
     R (>= 3.2.2)
 Imports: reshape2 (>= 1.4.1), RODBC(>= 1.3-12)
