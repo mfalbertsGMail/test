@@ -1,13 +1,13 @@
-#' @title DataAccess_S3V2: Object to connect and interact with the Capital database
+#' @title DataAccess: Object to connect and interact with the Capital database
 #' @examples 
-#' da_s3v2 <- DataAccess_S3V2(connection_param=connectionString, fs_id_param=1)
-#' DataAccess_S3V2.fi_get_instrument(da_s3v2)
+#' da <- DataAccess(connection_param=connectionString, fs_id_param=1)
+#' DataAccess.fi_get_instrument(da)
 #' @param connection_param The SQL Server connection string
 #' @param fs_id_param The scenario ID
 #' @export
 #' @docType methods
-#' @rdname DataAccess_S3V2-methods
-DataAccess_S3V2 <- function(connection_param ="", fs_id_param=NULL)
+#' @rdname DataAccess-methods
+DataAccess <- function(connection_param ="", fs_id_param=NULL)
 {
   # save the object variables
   me <- list(
@@ -18,7 +18,7 @@ DataAccess_S3V2 <- function(connection_param ="", fs_id_param=NULL)
   )
 
   ## set the name for the class
-  class(me) <- append(class(me), "DataAccess_S3V2")
+  class(me) <- append(class(me), "DataAccess")
   return(me)
 }
 
@@ -31,7 +31,7 @@ DataAccess_S3V2 <- function(connection_param ="", fs_id_param=NULL)
 #' @return Data frame containing the financial instrument data
 #' @import RODBC
 #' @export
-DataAccess_S3V2.fi_get_instrument <- function(object, as_of_date=NULL) {
+DataAccess.fi_get_instrument <- function(object, as_of_date=NULL) {
   object$is_init  == 0
     fi_instrument_init_nc(object$connection,object$fs_id)
   object$is_init = 1
