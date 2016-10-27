@@ -14,10 +14,9 @@
 # ' @return Data frame containing the financial instrument data
 #' @import RODBC
 
-fi_instrument_init_sp <- function(connectionString, fs_id) {
+sp_fi_instrument_init <- function(connectionString, fs_id) {
   cn <- odbcDriverConnect(connectionString)
   if (is.null(fs_id) == FALSE) {
-    # may want to put this into a seperate 'init' routine.
     sp <- paste("EXEC [app_r].[FI_Financial_Instrument_Property_load] @fs_id = ", fs_id)
     sqlQuery(cn, sp, errors=TRUE)
   }
@@ -33,7 +32,7 @@ fi_instrument_init_sp <- function(connectionString, fs_id) {
 # ' @return Data frame containing the financial instrument data
 # ' @import RODBC
 
-fi_instrument_get_sp <- function(connectionString, fs_id) {
+sp_fi_instrument_get <- function(connectionString, fs_id) {
   cn <- odbcDriverConnect(connectionString)
   # note: this will not return anything if the scenario has not been run or fi_instruments_init_sp has not been called
   #TODO - use FI_Financial_instrument but put extra parameter @use_effective_scalar_value)
@@ -55,7 +54,7 @@ fi_instrument_get_sp <- function(connectionString, fs_id) {
 # ' @import RODBC
 # ' @import reshape2
 # ' 
-fs_assumptions_get_sp <- function(connectionString, fs_id, transformation_sequence_order, criteria_squence_order) {
+sp_fs_assumptions_get <- function(connectionString, fs_id, transformation_sequence_order, criteria_squence_order) {
   cn <- odbcDriverConnect(connectionString)
   # make this a SP when done testing
   sp <- paste("SELECT property_code, period, unified_value FROM app.tf_capital_schedule_history(", fs_id, ",", transformation_sequence_order, ",", criteria_squence_order,  ") WHERE DATE IS NULL ORDER BY property_code, period")

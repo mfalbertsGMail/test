@@ -32,9 +32,9 @@ DataAccess <- function(connection_param ="", fs_id_param=NULL)
 #' @export
 DataAccess.fi_instrument_as_of_get <- function(object, as_of_date=NULL) {
   object$is_init  == 0
-    fi_instrument_init_sp(object$connection,object$fs_id)
+    sp_fi_instrument_init(object$connection,object$fs_id)
   object$is_init = 1
-  return(fi_instrument_get_sp(object$connection,object$fs_id))
+  return(sp_fi_instrument_get(object$connection,object$fs_id))
 }
 
 #' Get economic assumptions for the context
@@ -44,5 +44,5 @@ DataAccess.fi_instrument_as_of_get <- function(object, as_of_date=NULL) {
 #' @param criteria_sequence_order - an integer value found on the 'Transformation Entries for Sequence' screen
 #' @export
 DataAccess.fs_assumptions_get <- function(object, transformation_sequence_order, criteria_sequence_order) {
-  return(fs_assumptions_get_sp(object$connection, object$fs_id, transformation_sequence_order, criteria_sequence_order))
+  return(sp_fs_assumptions_get(object$connection, object$fs_id, transformation_sequence_order, criteria_sequence_order))
 }
