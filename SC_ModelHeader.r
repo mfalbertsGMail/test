@@ -109,7 +109,7 @@ sc_output_table <- as.data.frame(sc_result_set)
 ###################################################################################################
  #example...
   sc_da <- DataAccess(connection_param=sc_connection_string, fs_id_param=sc_fs_id)
-  instruments = DataAccess.fi_instrument_as_of_get(sc_da,'1/1/2015')
+  instruments = DataAccess.fi_instrument_get(sc_da,'1/1/2015')
   assumptions = DataAccess.fs_assumptions_get(sc_da,1,1)
   # print(instruments)
  # print(assumptions)

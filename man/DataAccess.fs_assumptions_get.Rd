@@ -4,11 +4,11 @@
 \alias{DataAccess.fs_assumptions_get}
 \title{Get economic assumptions for the context}
 \usage{
-DataAccess.fs_assumptions_get(object, transformation_sequence_order,
+DataAccess.fs_assumptions_get(da_obj, transformation_sequence_order,
   criteria_sequence_order)
 }
 \arguments{
-\item{object}{The Solvas dataAccess object}
+\item{da_obj}{- The Solvas dataAccess object}
 
 \item{transformation_sequence_order}{- an integer value found on the 'Transformations' screen}
 

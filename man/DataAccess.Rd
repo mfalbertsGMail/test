@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess}
 \alias{DataAccess}
-\title{DataAccess: Object to connect and interact with the Capital database}
+\title{DataAccess: da_obj to connect and interact with the Capital database}
 \usage{
 DataAccess(connection_param = "", fs_id_param = NULL)
 }
@@ -12,7 +12,7 @@ DataAccess(connection_param = "", fs_id_param = NULL)
 \item{fs_id_param}{The scenario ID}
 }
 \examples{
-da <- DataAccess(connection_param=connectionString, fs_id_param=1)
-DataAccess.fi_get_instrument(da)
+sc_da <- DataAccess(connection_param=connectionString, fs_id_param=1)
+DataAccess.fi_get_instrument(sc_da)
 }
 
