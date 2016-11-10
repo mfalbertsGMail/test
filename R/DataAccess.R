@@ -15,6 +15,8 @@ DataAccess <- function(connection_param ="", fs_id_param=NULL)
     is_init = 0
   )
 
+  cn <- odbcDriverConnect(connection)
+  odbcClose(cn)
   ## set the name for the class
   class(me) <- append(class(me), "DataAccess")
   return(me)
