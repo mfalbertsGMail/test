@@ -30,11 +30,11 @@ DataAccess <- function(connection_param ="", fs_id_param=NULL)
 #' @return Data frame containing the financial instrument data
 #' @import RODBC
 #' @export
-DataAccess.fi_instrument_get <- function(da_obj, effective_sched_date=NULL) {
+DataAccess.fi_instrument_get <- function(da_obj, effective_date = NULL, effective_period = NULL) {
   da_obj$is_init  == 0
     sp_fi_instrument_init(da_obj$connection,da_obj$fs_id)
   da_obj$is_init = 1
-  return(sp_fi_instrument_get(da_obj$connection,da_obj$fs_id))
+  return(sp_fi_instrument_get(da_obj$connection,da_obj$fs_id, effective_date, effective_period))
 }
 
 #' Get economic assumptions for the context

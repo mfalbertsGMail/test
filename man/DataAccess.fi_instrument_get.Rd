@@ -4,7 +4,8 @@
 \alias{DataAccess.fi_instrument_get}
 \title{Get fincancial instruments for the context}
 \usage{
-DataAccess.fi_instrument_get(da_obj, effective_sched_date = NULL)
+DataAccess.fi_instrument_get(da_obj, effective_date = NULL,
+  effective_period = NULL)
 }
 \arguments{
 \item{da_obj}{- The Solvas dataAccess object}

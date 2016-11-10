@@ -14,7 +14,7 @@ if (exists('sc_is_running_from_server') == FALSE || sc_is_running_from_server ==
   #' setup local connection data for model development and testing
   sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
   sc_event_id = 25
-  sc_fs_id = 12
+  sc_fs_id = 1
 }
 #  # end setup var for testing
 
@@ -88,29 +88,31 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
       error = function(cond)  paste("ERROR:  ", cond)	  
     )
   
-# collect all the variables in the environment that have sc_ prefix
-sc_var_name = c(unlist(ls(pattern = "sc_*"),use.names = FALSE))
-# set vector with variable values, use sc_undefined if variable does not exist - get0 checks if the var name is a variable ifnotfound is a parameter name to get0
-sc_var_value = unname(sapply(sc_var_name,
+  # collect all the variables in the environment that have sc_ prefix
+  sc_var_name = c(unlist(ls(pattern = "sc_*"),use.names = FALSE))
+  # set vector with variable values, use sc_undefined if variable does not exist - get0 checks if the var name is a variable ifnotfound is a parameter name to get0
+  sc_var_value = unname(sapply(sc_var_name,
                              function(x) 
                              {  
                                ifelse(is.null(get0(x,ifnotfound=sc_undefined)), 
                                       sc_undefined, 
                                       toString(get0(x,ifnotfound=sc_undefined)))
                              }))
-sc_result_set = data.frame(sc_var_name, sc_var_value, stringsAsFactors = FALSE)
+  sc_result_set = data.frame(sc_var_name, sc_var_value, stringsAsFactors = FALSE)
 
-print(sc_result_set)
-# push the results to the SQL server parameter from sp_execute_external_script
-sc_output_table <- as.data.frame(sc_result_set)
+  print(sc_result_set)
+  # push the results to the SQL server parameter from sp_execute_external_script
+  sc_output_table <- as.data.frame(sc_result_set)
 }
 ###################################################################################################
 # END OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
 ###################################################################################################
  #example...
   sc_da <- DataAccess(connection_param=sc_connection_string, fs_id_param=sc_fs_id)
-  instruments = DataAccess.fi_instrument_get(sc_da,'1/1/2015')
-  assumptions = DataAccess.fs_assumptions_get(sc_da,1,1)
+  instruments = DataAccess.fi_instrument_get(sc_da,NULL,1)
+  #print(instruments)
+  print(instruments['interest_rate_effective'])
+#  assumptions = DataAccess.fs_assumptions_get(sc_da,1,1)
   # print(instruments)
  # print(assumptions)
  # print(assumptions['LOSS_SEVERITY_RATE_BY_RELATIVE', '0'])
