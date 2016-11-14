@@ -35,13 +35,11 @@ sp_fi_instrument_init <- function(connectionString, fs_id) {
 sp_fi_instrument_get <- function(connectionString, fs_id,  effective_date, effective_period) {
   cn <- odbcDriverConnect(connectionString)
   # note: this will not return anything if the scenario has not been run or fi_instruments_init_sp has not been called
-  #TODO - use FI_Financial_instrument but put extra parameter @use_effective_scalar_value)
   sp <- paste("EXEC [app_r].[FI_Financial_Instrument_Effective_Scalar_get] @fs_id = ", 
                 fs_id, 
                 ",@effective_scalar_date = ",ifelse(is.null(effective_date), "NULL", paste("'",effective_date,"'")), 
                 ",@effective_scalar_period = ", ifelse(is.null(effective_period), "NULL", effective_period),
                 ",@match_LTE = 1")
-  #   ifelse(is.null(fs_id), "NULL", fs_id))
   data <- sqlQuery(cn, sp, errors=TRUE)
   odbcClose(cn)
   return(data)
