@@ -1,93 +1,36 @@
 
-# ## # setup sc_result_set for returning values
 #!!!! REMOVE THIS FOR REAL HEADER
 rm(list = ls(pattern = "sc_*")) # remove any sc_ from the env
-
-#sc_is_running_from_server = 1; # for local testing! remove before submitting model
-
-if (exists('sc_is_running_from_server') == FALSE || sc_is_running_from_server == 0)  
-{
-  #sc_output_table = NULL
-  sc_is_running_from_server = 1 # test setting to 1
-  #sc_connection_string = "Driver=SQL Server Native Client 11.0;server=(local);database=Internal_Capital_Dev;UId=solvas_user;Pwd=solvas"
-  
-  #' setup local connection data for model development and testing
-  sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
-  sc_event_id = 25
-  sc_fs_id = 1
-}
-#  # end setup var for testing
-
+# declare for local testing of call from server
+#sc_is_running_from_server = 1 
+#sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
+#sc_event_id = NULL
+#sc_fs_id = 1
+#end 
 ###################################################################################################
 # START OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
 #
-# Variables that start with sc_ should be considered 'Solvas|Capital' system variables. Naming your
+# Variables that start with sc_ should be considered 'Solvas|Capital' system variables. Naming user
 # variables with sc_ should be avoided.
 #
-# System Variables passed from the Server as parameters when running a scenario:
+# System cariables passed from the Server as parameters when running a scenario:
 #
-# sc_is_running_from_server - bit - 1 = this script is being called from the server, 0 or undefined 
-#   = local develpment)
-# sc_fs_id - int - the ID of the scenario being processed.
-# sc_event_id - int - used to report back log messages to server 
+# sc_connection_string      - string = the connection string used connect back to the sever
+# sc_is_running_from_server - bit - 1 = this script is being called from the server
+#                                   0 = local develpment (or undefined)
+# sc_fs_id                  - int - the ID of the scenario being processed.
+# sc_event_id               - int - used to report event messages to server 
 # 
 ###################################################################################################
+library(RODBC)
+library(Solvas.Capital.SqlUtility)
 
 if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 {
   # declare diagnostic variables 
   sc_undefined = "undefined"
-  
-  # check for required library RODBC
-  sc_diag_rodbc_lib =
-    tryCatch(
-      {
-        library(RODBC)
-        "success"
-      },  
-      warning = function(cond) paste("ERROR:  ", cond),
-      error = function(cond)  paste("ERROR:  ", cond) 
-    )
-  
-  # check for required library Solvas.Capital.Utility
-  sc_diag_solvas_utility_lib =
-    tryCatch(
-      {
-        library(Solvas.Capital.SqlUtility)
-        "success"
-      },  
-      warning = function(cond) paste("ERROR:  ", cond),
-      error = function(cond) paste("ERROR:  ", cond)	  
-    )
-  # hard code this until the package is done...
- sc_diag_solvas_utility_lib = "success"
-    
-  
-  # check for odbc connectivity
-  sc_diag_connection = 
-    tryCatch(
-      {
-        cn <- odbcDriverConnect(connection=sc_connection_string)
-        print(sqlQuery(cn, "SELECT CURRENT_USER", errors=TRUE))
-        odbcClose(cn)
-        "success"
-      } ,  
-      warning = function(cond) paste("ERROR:  ", cond),
-      error = function(cond)  paste("ERROR:  ", cond)	  
-    )
-  
-  sc_current_db_user = 
-    tryCatch(
-      {
-        cn <- odbcDriverConnect(connection=sc_connection_string)
-        curr_user = sqlQuery(cn, "SELECT CURRENT_USER", errors=TRUE)
-        odbcClose(cn)
-        curr_user[[1]]
-      } ,  
-      warning = function(cond) paste("ERROR:  ", cond),
-      error = function(cond)  paste("ERROR:  ", cond)	  
-    )
-  
+  sc_da <- DataAccess(connection_param=sc_connection_string, fs_id_param=sc_fs_id)
+  sc_da_connection_status <- DataAccess.connection_status(sc_da)
   # collect all the variables in the environment that have sc_ prefix
   sc_var_name = c(unlist(ls(pattern = "sc_*"),use.names = FALSE))
   # set vector with variable values, use sc_undefined if variable does not exist - get0 checks if the var name is a variable ifnotfound is a parameter name to get0
@@ -103,15 +46,34 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
   print(sc_result_set)
   # push the results to the SQL server parameter from sp_execute_external_script
   sc_output_table <- as.data.frame(sc_result_set)
-}
-###################################################################################################
-# END OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
-###################################################################################################
- #example...
+} else
+  
+  ###################################################################################################
+  # END OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
+  ###################################################################################################
+  
+  ###################################################################################################
+  #
+  # Note: For local model development modifiy the variables in this statement to point the database
+  # (sc_connection_string) and scenario ID (sc_fs_id)
+  #
+  ###################################################################################################
+{
+  sc_is_running_from_server = 0 
+  sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
+  sc_event_id = NULL
+  sc_fs_id = 1
   sc_da <- DataAccess(connection_param=sc_connection_string, fs_id_param=sc_fs_id)
+  sc_da_connection_status <- DataAccess.connection_status(sc_da)
+
+}
+ # Example...
+if (sc_da_connection_status == "success") {
+  # do model development here...
   instruments = DataAccess.fi_instrument_get(sc_da,NULL,1)
   #print(instruments)
   print(instruments['interest_rate_effective'])
+}  
 #  assumptions = DataAccess.fs_assumptions_get(sc_da,1,1)
   # print(instruments)
  # print(assumptions)

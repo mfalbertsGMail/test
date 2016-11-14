@@ -15,11 +15,31 @@ DataAccess <- function(connection_param ="", fs_id_param=NULL)
     is_init = 0
   )
 
-  cn <- odbcDriverConnect(connection)
-  odbcClose(cn)
   ## set the name for the class
   class(me) <- append(class(me), "DataAccess")
   return(me)
+}
+
+
+#' returns the connection status for current da_obj connection string
+#' 
+#' Takes a DataAccess da_obj and returns "success" if the connection is 
+#' working otherwise the error message is returned.
+#' @param da_obj - The Solvas dataAccess object 
+#' @return connection status string "success" if connection is valid otherwise an error message is returned
+#' @import RODBC
+#' @export
+DataAccess.connection_status <- function(da_obj) {
+  return 
+    tryCatch(
+      {
+        cn <- odbcDriverConnect(connection=sc_connection_string)
+        odbcClose(cn)
+        "success"
+      } ,  
+      warning = function(cond) paste("ERROR:  ", cond),
+      error = function(cond)  paste("ERROR:  ", cond)	  
+    )
 }
 
 #' Get fincancial instruments for the context
