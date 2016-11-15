@@ -1,6 +1,6 @@
 
 #!!!! REMOVE THIS FOR REAL HEADER
-rm(list = ls(pattern = "sc_*")) # remove any sc_ from the env
+#rm(list = ls(pattern = "sc_*")) # remove any sc_ from the env
 # declare for local testing of call from server
 #sc_is_running_from_server = 1 
 #sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
@@ -13,11 +13,11 @@ rm(list = ls(pattern = "sc_*")) # remove any sc_ from the env
 # Variables that start with sc_ should be considered 'Solvas|Capital' system variables. Naming user
 # variables with sc_ should be avoided.
 #
-# System cariables passed from the Server as parameters when running a scenario:
+# System variables passed from the Server as parameters when running a scenario:
 #
 # sc_connection_string      - string = the connection string used connect back to the sever
 # sc_is_running_from_server - bit - 1 = this script is being called from the server
-#                                   0 = local develpment (or undefined)
+#                                   0 = local development (or undefined)
 # sc_fs_id                  - int - the ID of the scenario being processed.
 # sc_event_id               - int - used to report event messages to server 
 # 

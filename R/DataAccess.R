@@ -1,3 +1,6 @@
+#' The DataAccess object is the main object that must be created in order to use any of 
+#' the other methods.  This object is always the first parameter passed to any of the 
+#' the methods.
 #' @title DataAccess: da_obj to connect and interact with the Capital database
 #' @examples
 #' connectionString = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
@@ -22,7 +25,7 @@ DataAccess <- function(connection_param ="", fs_id_param=NULL)
 }
 
 
-#' returns the connection status for current da_obj connection string
+#' Returns the connection status for current da_obj connection string
 #' 
 #' Takes a DataAccess da_obj and returns "success" if the connection is 
 #' working otherwise the error message is returned.

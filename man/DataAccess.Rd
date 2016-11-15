@@ -11,8 +11,14 @@ DataAccess(connection_param = "", fs_id_param = NULL)
 
 \item{fs_id_param}{The scenario ID}
 }
+\description{
+The DataAccess object is the main object that must be created in order to use any of 
+the other methods.  This object is always the first parameter passed to any of the 
+the methods.
+}
 \examples{
+connectionString = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
 sc_da <- DataAccess(connection_param=connectionString, fs_id_param=1)
-DataAccess.fi_get_instrument(sc_da)
+DataAccess.fi_instrument_get(sc_da, NULL, 1)
 }
 
