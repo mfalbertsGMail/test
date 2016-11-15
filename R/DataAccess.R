@@ -1,7 +1,8 @@
 #' @title DataAccess: da_obj to connect and interact with the Capital database
-#' @examples 
+#' @examples
+#' connectionString = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
 #' sc_da <- DataAccess(connection_param=connectionString, fs_id_param=1)
-#' DataAccess.fi_get_instrument(sc_da)
+#' DataAccess.fi_instrument_get(sc_da, NULL, 1)
 #' @param connection_param The SQL Server connection string
 #' @param fs_id_param The scenario ID
 #' @export
@@ -33,7 +34,7 @@ DataAccess.connection_status <- function(da_obj) {
   return 
     tryCatch(
       {
-        cn <- odbcDriverConnect(connection=sc_connection_string)
+        cn <- odbcDriverConnect(da_obj$connection)
         odbcClose(cn)
         "success"
       } ,  
@@ -44,11 +45,13 @@ DataAccess.connection_status <- function(da_obj) {
 
 #' Get fincancial instruments for the context
 #' 
-#' Takes a DataAccess da_obj and effective_sched_date and returns a datatable
+#' Takes a DataAccess da_obj and effective_date or effective_period  and returns a datatable
 #' with the instruments.  Properties that are schedules are coalesced 
-#' to a single value based on the effective_sched_date
+#' to a single value based on the effective_date or effective_period. 
+#' NOTE: EITHER effective_date or effective_period must be poplulate the other one must be NULL
 #' @param da_obj - The Solvas dataAccess object 
-#' @param effective_sched_date The effective_sched_date to use for schedule data types
+#' @param effective_date = Used for to resolve schedules column values to a single scalar value
+#' @param effective_period = Used for to resolve schedules column values to a single scalar value (1=first period)
 #' @return Data frame containing the financial instrument data
 #' @import RODBC
 #' @export
