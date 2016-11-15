@@ -71,21 +71,6 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 if (sc_da_connection_status == "success") {
   # do model development here...
   instruments = DataAccess.fi_instrument_get(sc_da,NULL,1)
-  #print(instruments)
+  # print out interest_rate_effective value for all loans
   print(instruments['interest_rate_effective'])
 }  
-#  assumptions = DataAccess.fs_assumptions_get(sc_da,1,1)
-  # print(instruments)
- # print(assumptions)
- # print(assumptions['LOSS_SEVERITY_RATE_BY_RELATIVE', '0'])
- 
- ## cn <- odbcDriverConnect(sc_da$connection)
- ## # make this a SP when done testing
- ## sp <- paste("SELECT property_code, period, unified_value FROM app.tf_capital_schedule_history(", sc_da$fs_id, ",", 1, ",", 1,  ") WHERE DATE IS NULL ORDER BY property_code, period")
- ## data <- sqlQuery(cn, sp, errors=TRUE)
- ## print(data)
- ## # reshape so rather than rows of data it is by period in the column
- ## data <- reshape2::dcast(data, property_code ~period, value.var = 'unified_value')
- ## print(data)
- ## odbcClose(cn)
- ## 
