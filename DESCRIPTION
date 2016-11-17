@@ -1,5 +1,5 @@
 Package: Solvas.Capital.SqlUtility
-Title: Provide database utilities for
+Title: Solvas.Capital.SqlUtility
 Version: 0.0.0.9002
 Authors@R: person("Mark","Alberts", email="malberts@deloitte.com", role=c("aut","cre"))
 Author: Mark Alberts [aut, cre]
