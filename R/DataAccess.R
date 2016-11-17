@@ -9,9 +9,11 @@
 #' 
 #' @title DataAccess: da_obj to connect and interact with the Capital database
 #' @examples
+#'\dontrun{
 #' connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
 #' sc_da <- DataAccess(connection_string_param=connection_string, fs_id_param=1)
 #' DataAccess.FIInstrumentGet(sc_da, NULL, 1)
+#'}
 #' @param connection_string_param - The SQL Server connection string
 #' @param fs_id_param - The scenario id
 #' @export
