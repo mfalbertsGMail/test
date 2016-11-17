@@ -1,7 +1,7 @@
 # Style guide:
 # 1. Variable names are all lower case use _ to separate words (i.e. day_one)
 # 2. Functions names are camel case, verbs i.e. (FIInstrumentGet)
-# 3. Functions (methods) associated with S3 classes follow use the naming convention ClassName.FunctionName(class_object_instance,...)
+# 3. Functions (methods) associated with S3 classes follow the naming convention ClassName.FunctionName(class_object_instance,...)
 
 
 #' DataAccess is a required object which always serves as the first parameter 
