@@ -17,7 +17,7 @@
 #' @export
 DataAccess <- function(connection_string_param = "", fs_id_param = NULL)
 {
-  # save the da_obj variables
+  # save da_obj variables
   me <- list(
     connection = connection_string_param,
     fs_id = fs_id_param,
