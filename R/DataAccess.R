@@ -76,9 +76,11 @@ DataAccess.FIInstrumentGet <- function(da_obj, effective_date = NULL, effective_
 #' Get economic assumptions
 #' 
 #' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
-#' @param transformation_sequence_order - An integer value found on the 'Transformations' screen
-#' @param criteria_sequence_order - An integer value found on the 'Transformation Entries for Sequence' screen
+#' @param transformation_description - name of transformation (i.e. '(apply to all)').  the first
+#' transformation by sequence order will be used if NULL, if two or more transformations have the
+#' same description an error message is returned
+#' @param use_date - if true then matrix columns will be dates, else periods. default to false 
 #' @export
-DataAccess.FSAssumptionsGet <- function(da_obj, transformation_sequence_order, criteria_sequence_order) {
-  return(SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, transformation_sequence_order, criteria_sequence_order))
+DataAccess.FSAssumptionsGet <- function(da_obj, transformation_description = NULL, use_dates = false) {
+  return(SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, transformation_description, use_dates))
 }

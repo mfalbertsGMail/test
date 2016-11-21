@@ -49,18 +49,27 @@ SPFIInstrumentGet <- function(connection_string, fs_id,  effective_date, effecti
 #  with the instruments
 #  @param connection_string  - the string representing the connection string...
 #  @param fs_id The scenario ID
-#  @param transformation_sequence_order Way to identify the the transformation entry to get the criteria from 
-#  @param criteria_sequence_order Way to identify the the criteria entry to get the characteristics from 
+#  @param transformation_description - name of transformation (i.e. '(apply to all)').  the first
+#  transformation by sequence order will be used if NULL, if two or more transformations have the
+#  same description an error message is returned
+#  @param use_date - if true then matrix columns will be dates, else periods. default to false 
 #  @return data frame containing the economic factors
 #' @import RODBC
 #' @import reshape2
-SPFSAssumptionsGet <- function(connection_string, fs_id, transformation_sequence_order, criteria_squence_order) {
+SPFSAssumptionsGet <- function(connection_string, fs_id, transformation_description, use_dates) {
   cn <- odbcDriverConnect(connection_string)
   # make this a SP when done testing
-  sp <- paste("SELECT property_code, period, unified_value FROM app.tf_capital_schedule_history(", fs_id, ",", transformation_sequence_order, ",", criteria_squence_order,  ") WHERE DATE IS NULL ORDER BY property_code, period")
+  sp <- paste("EXEC [app_r].[FS_Assumptions_get] @fs_id = ", 
+               fs_id, 
+               ",@tm_desc = ",ifelse(is.null(transformation_description), "NULL", paste("'",transformation_description,"'"))
+               )
   data <- sqlQuery(cn, sp, errors=TRUE)
   # reshape so rather than rows of data it is by period in the column
-  data <- reshape2::dcast(data, property_code ~period, value.var = 'unified_value')
+  if (use_dates == FALSE) {
+    data <- reshape2::dcast(data, property_code ~period, value.var = 'unified_value')
+  } else {
+    data <- reshape2::dcast(data, property_code ~date, value.var = 'unified_value')
+  }
   rownames(data) <- data[,'property_code']
   odbcClose(cn)
   return(data)

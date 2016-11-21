@@ -4,15 +4,17 @@
 \alias{DataAccess.FSAssumptionsGet}
 \title{Get economic assumptions}
 \usage{
-DataAccess.FSAssumptionsGet(da_obj, transformation_sequence_order,
-  criteria_sequence_order)
+DataAccess.FSAssumptionsGet(da_obj, transformation_description = NULL,
+  use_dates = false)
 }
 \arguments{
 \item{da_obj}{- Current instance of Solvas|Capital's DataAccess class.}
 
-\item{transformation_sequence_order}{- An integer value found on the 'Transformations' screen}
+\item{transformation_description}{- name of transformation (i.e. '(apply to all)').  the first
+transformation by sequence order will be used if NULL, if two or more transformations have the same description
+an error will return}
 
-\item{criteria_sequence_order}{- An integer value found on the 'Transformation Entries for Sequence' screen}
+\item{use_date}{- if true then matrix columns will be dates, else periods. default to false}
 }
 \description{
 Get economic assumptions

@@ -69,9 +69,12 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
  # Example...
 if (sc_da_connection_status == "success") {
   # do model development here...
+  assumptions = DataAccess.FSAssumptionsGet(sc_da, NULL, FALSE)
+  print(assumptions)
   instruments = DataAccess.FIInstrumentGet(sc_da,NULL,1)
   # print out interest_rate_effective value for all loans
   print(instruments['interest_rate_effective'])
+  
   instruments = DataAccess.FIInstrumentGet(sc_da,'9/30/2014',NULL)
   # print out interest_rate_effective value for all loans
   print(instruments['interest_rate_effective'])
