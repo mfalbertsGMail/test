@@ -11,8 +11,8 @@ DataAccess.FSAssumptionsGet(da_obj, transformation_description = NULL,
 \item{da_obj}{- Current instance of Solvas|Capital's DataAccess class.}
 
 \item{transformation_description}{- name of transformation (i.e. '(apply to all)').  the first
-transformation by sequence order will be used if NULL, if two or more transformations have the same description
-an error will return}
+transformation by sequence order will be used if NULL, if two or more transformations have the
+same description an error message is returned}
 
 \item{use_date}{- if true then matrix columns will be dates, else periods. default to false}
 }
