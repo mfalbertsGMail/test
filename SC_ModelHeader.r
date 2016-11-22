@@ -1,6 +1,6 @@
 
 #  !!!! REMOVE THIS FOR REAL HEADER
-rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
+#rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
 # declare for local testing of call from serversc_is_running_from_server = 1 
 #sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
 #sc_event_id = NULL
