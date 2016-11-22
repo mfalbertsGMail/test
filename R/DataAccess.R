@@ -1,6 +1,6 @@
 # Style guide:
 # 1. Variable names are all lower case use _ to separate words (i.e. day_one)
-# 2. Functions names are camel case, verbs i.e. (FIInstrumentGet)
+# 2. Functions names are camel case, verbs i.e. (FiInstrumentGet)
 # 3. Functions (methods) associated with S3 classes follow the naming convention ClassName.FunctionName(class_object_instance,...)
 
 
@@ -12,7 +12,7 @@
 #' \dontrun{
 #' connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
 #' sc_da <- DataAccess(connection_string_param=connection_string, fs_id_param=1)
-#' DataAccess.FIInstrumentGet(sc_da, NULL, 1)
+#' DataAccess.FiInstrumentGet(sc_da, NULL, 1)
 #' }
 #' @param connection_string_param - The SQL Server connection string
 #' @param fs_id_param - The scenario id
@@ -66,21 +66,21 @@ DataAccess.ConnectionStatus <- function(da_obj) {
 #' @return Data frame containing the financial instrument data
 #' @import RODBC
 #' @export
-DataAccess.FIInstrumentGet <- function(da_obj, effective_date = NULL, effective_period = NULL) {
+DataAccess.FiInstrumentGet <- function(da_obj, effective_date = NULL, effective_period = NULL) {
  if (da_obj$is_init == 0)
-    SPInstrumentPropertyLoad(da_obj$connection,da_obj$fs_id)
+    Solvas.Capital.SqlUtility::SPInstrumentPropertyLoad(da_obj$connection,da_obj$fs_id)
   da_obj$is_init = 1
-  return(SPFIInstrumentGet(da_obj$connection,da_obj$fs_id, effective_date, effective_period))
+  return(Solvas.Capital.SqlUtility::SPFIInstrumentGet(da_obj$connection,da_obj$fs_id, effective_date, effective_period))
 }
 
 #' Get economic assumptions
 #' 
 #' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
-#' @param transformation_description - name of transformation (i.e. '(apply to all)').  the first
+#' @param tm_desc - description of transformation (i.e. '(apply to all)').  the first
 #' transformation by sequence order will be used if NULL, if two or more transformations have the
 #' same description an error message is returned
-#' @param use_date - if true then matrix columns will be dates, else periods. default to false 
+#' @param use_dates - if TRUE then matrix columns will be dates, else periods. default to false 
 #' @export
-DataAccess.FSAssumptionsGet <- function(da_obj, transformation_description = NULL, use_dates = false) {
-  return(SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, transformation_description, use_dates))
+DataAccess.FSAssumptionsGet <- function(da_obj, tm_desc = NULL, use_dates = FALSE) {
+  return(Solvas.Capital.SqlUtility::SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, tm_desc = tm_desc, use_dates))
 }
