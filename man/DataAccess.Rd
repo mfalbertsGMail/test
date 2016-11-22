@@ -4,15 +4,22 @@
 \alias{DataAccess}
 \title{DataAccess: da_obj to connect and interact with the Capital database}
 \usage{
-DataAccess(connection_param = "", fs_id_param = NULL)
+DataAccess(connection_string_param = "", fs_id_param = NULL)
 }
 \arguments{
-\item{connection_param}{The SQL Server connection string}
+\item{connection_string_param}{- The SQL Server connection string}
 
-\item{fs_id_param}{The scenario ID}
+\item{fs_id_param}{- The scenario id}
+}
+\description{
+DataAccess is a required object which always serves as the first parameter 
+passed to any of the other functions.
 }
 \examples{
-sc_da <- DataAccess(connection_param=connectionString, fs_id_param=1)
-DataAccess.fi_get_instrument(sc_da)
+\dontrun{
+connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
+sc_da <- DataAccess(connection_string_param=connection_string, fs_id_param=1)
+DataAccess.FIInstrumentGet(sc_da, NULL, 1)
+}
 }
 
