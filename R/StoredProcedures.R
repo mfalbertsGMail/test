@@ -1,6 +1,8 @@
 #  Low-level access to the database stored procedures.  Not public - use 
 #  the object model to access these functions. All functions that directly
 #  call any SPs should be at this level. 
+# 
+#  Note: @keywords internal keeps the documentation from being published.
 #  
 #  Initializes the financial instrument records - must be done on scenarios
 #  that have not been run

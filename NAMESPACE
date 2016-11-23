@@ -2,8 +2,8 @@
 
 export(DataAccess)
 export(DataAccess.ConnectionStatus)
-export(DataAccess.FSAssumptionsGet)
 export(DataAccess.FiInstrumentGet)
+export(DataAccess.FsAssumptionsGet)
 export(SPFIInstrumentGet)
 export(SPFSAssumptionsGet)
 export(SPInstrumentPropertyLoad)

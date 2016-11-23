@@ -81,6 +81,6 @@ DataAccess.FiInstrumentGet <- function(da_obj, effective_date = NULL, effective_
 #' same description an error message is returned
 #' @param use_dates - if TRUE then matrix columns will be dates, else periods. default to false 
 #' @export
-DataAccess.FSAssumptionsGet <- function(da_obj, tm_desc = NULL, use_dates = FALSE) {
+DataAccess.FsAssumptionsGet <- function(da_obj, tm_desc = NULL, use_dates = FALSE) {
   return(Solvas.Capital.SqlUtility::SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, tm_desc = tm_desc, use_dates))
 }

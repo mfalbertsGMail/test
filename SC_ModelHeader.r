@@ -71,7 +71,7 @@ if (sc_da_connection_status == "success") {
   # do model development here...
 
   # example: get and print out all assumptions
-  assumptions = DataAccess.FSAssumptionsGet(sc_da, NULL, FALSE)
+  assumptions = DataAccess.FsAssumptionsGet(sc_da, NULL, FALSE)
   print(assumptions)
 
   # example: get and print out interest_rate_effective value for all loans for period 1
