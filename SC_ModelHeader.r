@@ -1,10 +1,10 @@
 
 #  !!!! REMOVE THIS FOR REAL HEADER
-#  rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
-#  # declare for local testing of call from serversc_is_running_from_server = 1 
-#  sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
-#  sc_event_id = NULL
-#  sc_fs_id = 1
+#rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
+# declare for local testing of call from serversc_is_running_from_server = 1 
+#sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
+#sc_event_id = NULL
+#sc_fs_id = 1
 #end 
 ###################################################################################################
 # START OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
@@ -28,7 +28,7 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 {
   # declare diagnostic variables 
   sc_undefined = "undefined"
-  sc_da <- DataAccess(connection_param = sc_connection_string, fs_id_param = sc_fs_id)
+  sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id)
   sc_da_connection_status <- DataAccess.ConnectionStatus(sc_da)
   # collect all the variables in the environment that have sc_ prefix
   sc_var_name = c(unlist(ls(pattern = "sc_*"), use.names = FALSE))
@@ -69,11 +69,17 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
  # Example...
 if (sc_da_connection_status == "success") {
   # do model development here...
-  instruments = DataAccess.FIInstrumentGet(sc_da,NULL,1)
-  # print out interest_rate_effective value for all loans
+
+  # example: get and print out all assumptions
+  assumptions = DataAccess.FsAssumptionsGet(sc_da, NULL, FALSE)
+  print(assumptions)
+
+  # example: get and print out interest_rate_effective value for all loans for period 1
+  instruments = DataAccess.FiInstrumentGet(sc_da,NULL,1)
   print(instruments['interest_rate_effective'])
-  instruments = DataAccess.FIInstrumentGet(sc_da,'9/30/2014',NULL)
-  # print out interest_rate_effective value for all loans
+  
+  # example: get and print out interest_rate_effective value for all loans for effective date 9/30/2014
+  instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
   print(instruments['interest_rate_effective'])
 
 }  

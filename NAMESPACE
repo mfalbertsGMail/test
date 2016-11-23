@@ -2,7 +2,10 @@
 
 export(DataAccess)
 export(DataAccess.ConnectionStatus)
-export(DataAccess.FIInstrumentGet)
-export(DataAccess.FSAssumptionsGet)
+export(DataAccess.FiInstrumentGet)
+export(DataAccess.FsAssumptionsGet)
+export(SPFIInstrumentGet)
+export(SPFSAssumptionsGet)
+export(SPInstrumentPropertyLoad)
 import(RODBC)
 import(reshape2)
