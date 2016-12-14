@@ -1,7 +1,8 @@
 
 #  !!!! REMOVE THIS FOR REAL HEADER
 #rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
-# declare for local testing of call from serversc_is_running_from_server = 1 
+# declare for local testing of call from server
+#sc_is_running_from_server = 1
 #sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
 #sc_event_id = NULL
 #sc_fs_id = 1
@@ -30,6 +31,8 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
   sc_undefined = "undefined"
   sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id)
   sc_da_connection_status <- DataAccess.ConnectionStatus(sc_da)
+  sc_libPath = .libPaths()
+  
   # collect all the variables in the environment that have sc_ prefix
   sc_var_name = c(unlist(ls(pattern = "sc_*"), use.names = FALSE))
   # set vector with variable values, use sc_undefined if variable does not exist - get0 checks if the var name is a variable ifnotfound is a parameter name to get0
@@ -41,7 +44,6 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
                                       toString(get0(x, ifnotfound = sc_undefined)))
                              }))
   sc_result_set = data.frame(sc_var_name, sc_var_value, stringsAsFactors = FALSE)
-
   print(sc_result_set)
   # Push results to the SQL Server parameter
   sc_output_table <- as.data.frame(sc_result_set)

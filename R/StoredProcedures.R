@@ -60,7 +60,7 @@ SPFIInstrumentGet <- function(connection_string, fs_id,  effective_date, effecti
 #' @keywords internal
 SPPackageVersionCompatible <- function(connection_string) {
   cn <- odbcDriverConnect(connection_string)
-  fn <- paste("SELECT  app_r.PackageVersionCompatible('",gsub(" ", "", noquote(packageDescription('Solvas.Capital.SQLUtility')$Version)),"')")
+  fn <- paste("SELECT  app_r.PackageVersionCompatible('",gsub(" ", "", noquote(utils::packageDescription('Solvas.Capital.SQLUtility')$Version)),"')")
   data <- sqlQuery(cn, fn, errors=TRUE)
   odbcClose(cn)
   if (data[1] == 1) 
