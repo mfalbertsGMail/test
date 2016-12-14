@@ -47,7 +47,7 @@ DataAccess.ConnectionStatus <- function(da_obj) {
       {
         #cn <- odbcDriverConnect(da_obj$connection)
         #odbcClose(cn)
-        if (SPPackageVersionCompatible(da_obj$connection) == FALSE)
+        if (Solvas.Capital.SqlUtility::SPPackageVersionCompatible(da_obj$connection) == FALSE)
           "package version is not compatible with the expected version on the server"
         else
           "success"
@@ -66,7 +66,7 @@ DataAccess.ConnectionStatus <- function(da_obj) {
 #' @import RODBC
 #' @export
 DataAccess.PackageVersionCompatible <- function(da_obj) {
-  return(SPPackageVersionCompatible(da_obj$connection))
+  return(Solvas.Capital.SqlUtility::SPPackageVersionCompatible(da_obj$connection))
 }
   
 #' Get financial instruments
