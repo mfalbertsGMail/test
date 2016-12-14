@@ -82,4 +82,6 @@ if (sc_da_connection_status == "success") {
   instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
   print(instruments['interest_rate_effective'])
 
-}  
+} else {
+  print(paste("There was an error connecting:", sc_da_connection_status))
+}

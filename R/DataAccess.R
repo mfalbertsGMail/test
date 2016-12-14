@@ -38,22 +38,37 @@ DataAccess <- function(connection_string_param = "", fs_id_param = NULL)
 #' Takes a DataAccess da_obj and returns "success" if the connection is 
 #' working otherwise the error message is returned.
 #' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
-#' @return connection status string "success" if connection is valid otherwise an error message is returned
+#' @return "success" if connection is valid otherwise an error message is returned
 #' @import RODBC
 #' @export
 DataAccess.ConnectionStatus <- function(da_obj) {
   return 
     tryCatch(
       {
-        cn <- odbcDriverConnect(da_obj$connection)
-        odbcClose(cn)
-        "success"
+        #cn <- odbcDriverConnect(da_obj$connection)
+        #odbcClose(cn)
+        if (SPPackageVersionCompatible(da_obj$connection) == FALSE)
+          "package version is not compatible with the expected version on the server"
+        else
+          "success"
       } ,  
       warning = function(cond) paste("ERROR:  ", cond),
       error = function(cond)  paste("ERROR:  ", cond)	  
     )
 }
 
+#' Returns the connection status 
+#' 
+#' Takes a DataAccess da_obj and returns "success" if the connection is 
+#' working otherwise the error message is returned.
+#' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
+#' @return "success" if the version is compatible with the Solvas|Capital database server
+#' @import RODBC
+#' @export
+DataAccess.PackageVersionCompatible <- function(da_obj) {
+  return(SPPackageVersionCompatible(da_obj$connection))
+}
+  
 #' Get financial instruments
 #' 
 #' Takes a DataAccess da_obj and effective_date or effective_period and returns a DataTable
@@ -82,5 +97,8 @@ DataAccess.FiInstrumentGet <- function(da_obj, effective_date = NULL, effective_
 #' @param use_dates - if TRUE then matrix columns will be dates, else periods. default to false 
 #' @export
 DataAccess.FsAssumptionsGet <- function(da_obj, tm_desc = NULL, use_dates = FALSE) {
+  if (da_obj$is_init == 0)
+    Solvas.Capital.SqlUtility::SPInstrumentPropertyLoad(da_obj$connection,da_obj$fs_id)
+  da_obj$is_init = 1
   return(Solvas.Capital.SqlUtility::SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, tm_desc = tm_desc, use_dates))
 }
