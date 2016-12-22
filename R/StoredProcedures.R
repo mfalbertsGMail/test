@@ -52,6 +52,24 @@ SPFIInstrumentGet <- function(connection_string, fs_id,  effective_date, effecti
 }
 
 #' Internal Solvas|Capital Function 
+#' Checks the passed package version with the expected version on the current server for compatibility
+#' @param connection_string  - the string representing the connection string...
+#' @return boolean - true if they are compatible 
+#' @import RODBC
+#' @export
+#' @keywords internal
+SPPackageVersionCompatible <- function(connection_string) {
+  cn <- odbcDriverConnect(connection_string)
+  fn <- paste("SELECT  app_r.PackageVersionCompatible('",gsub(" ", "", noquote(utils::packageDescription('Solvas.Capital.SQLUtility')$Version)),"')")
+  data <- sqlQuery(cn, fn, errors=TRUE)
+  odbcClose(cn)
+  if (data[1] == 1) 
+    return (TRUE)
+  else
+    return (FALSE)
+}
+
+#' Internal Solvas|Capital Function 
 #' gets Solvas|Capital assumptions 
 #' @param connection_string  - the string representing the connection string...
 #' @param fs_id The scenario ID
