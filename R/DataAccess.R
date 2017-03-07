@@ -102,3 +102,18 @@ DataAccess.FsAssumptionsGet <- function(da_obj, tm_desc = NULL, use_dates = FALS
   da_obj$is_init = 1
   return(Solvas.Capital.SqlUtility::SPFSAssumptionsGet(da_obj$connection, da_obj$fs_id, tm_desc = tm_desc, use_dates))
 }
+
+#' Get initial account balances for the scenario (based on the scenarios entity)
+#' Return a dataframe of all the initial account balances. The dataframe will contain all accounts 
+#' and all dates for the reporting period.  NA will be used when no account balance exists.
+#' 
+#' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
+#' @param use_account_name if TRUE will use account_name, false will use account_number
+#' @export
+DataAccess.FsInitalAccountBalanceGet <- function(da_obj, use_account_name = TRUE) {
+  if (da_obj$is_init == 0)
+    Solvas.Capital.SqlUtility::SPInstrumentPropertyLoad(da_obj$connection, da_obj$fs_id)
+  da_obj$is_init = 1
+  return(Solvas.Capital.SqlUtility::SPFSInitialAccountBalanceGet(da_obj$connection, da_obj$fs_id, use_account_name))
+}
+

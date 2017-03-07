@@ -18,4 +18,3 @@ same description an error message is returned}
 \description{
 Get economic assumptions
 }
-

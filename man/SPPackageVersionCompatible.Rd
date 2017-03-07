@@ -18,4 +18,3 @@ Internal Solvas|Capital Function
 Checks the passed package version with the expected version on the current server for compatibility
 }
 \keyword{internal}
-

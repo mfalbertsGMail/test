@@ -22,4 +22,3 @@ sc_da <- DataAccess(connection_string_param=connection_string, fs_id_param=1)
 DataAccess.FiInstrumentGet(sc_da, NULL, 1)
 }
 }
-

@@ -23,4 +23,3 @@ with the instruments.  Properties that are schedules are coalesced
 to a single value based on the effective_date or effective_period. 
 NOTE: EITHER effective_date or effective_period must be populated, the other one must be NULL
 }
-

@@ -16,4 +16,3 @@ DataAccess.ConnectionStatus(da_obj)
 Takes a DataAccess da_obj and returns "success" if the connection is 
 working otherwise the error message is returned.
 }
-

@@ -1,11 +1,13 @@
 
-#  !!!! REMOVE THIS FOR REAL HEADER
-#rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
-# declare for local testing of call from server
-#sc_is_running_from_server = 1
-#sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
-#sc_event_id = NULL
-#sc_fs_id = 1
+
+if (1 == 0) {
+  rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
+  # declare for local testing of call from server
+  sc_is_running_from_server = 1
+  sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
+  sc_event_id = NULL
+  sc_fs_id = 1
+}
 #end 
 ###################################################################################################
 # START OF SOLVAS|CAPITAL HEADER - DO NOT MODIFY 
@@ -72,9 +74,16 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 if (sc_da_connection_status == "success") {
   # do model development here...
 
+  # example: get inital account balances
+  account_balances = DataAccess.FsInitalAccountBalanceGet(sc_da)
+  # save the TODO
+  #DataAccess.FsAccountBalancePut(sc_da, account_balances)
+  
   # example: get and print out all assumptions
   assumptions = DataAccess.FsAssumptionsGet(sc_da, NULL, FALSE)
-  print(assumptions)
+  print(assumptions['BBB_CORPORATE_YIELD_BY_RELATIVE',1])
+  print(instruments["HISTORIC_PRINCIPAL_BALANCE_BB_BY_DATE",1])
+  #print(assumptions)
 
   # example: get and print out interest_rate_effective value for all loans for period 1
   instruments = DataAccess.FiInstrumentGet(sc_da,NULL,1)

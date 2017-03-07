@@ -24,4 +24,3 @@ Internal Solvas|Capital Function
 Get financial instruments
 }
 \keyword{internal}
-
