@@ -24,4 +24,3 @@ Internal Solvas|Capital Function
 gets Solvas|Capital assumptions
 }
 \keyword{internal}
-
