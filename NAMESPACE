@@ -3,6 +3,7 @@
 export(DataAccess)
 export(DataAccess.ConnectionStatus)
 export(DataAccess.FiInstrumentGet)
+export(DataAccess.FsAccountBalancePut)
 export(DataAccess.FsAssumptionsGet)
 export(DataAccess.FsInitalAccountBalanceGet)
 export(DataAccess.PackageVersionCompatible)

@@ -4,6 +4,47 @@
 # 
 #  Note: @keywords internal keeps the documentation from being published.
 #  
+
+###################################################################
+# Helper Functions
+###################################################################
+# 
+#' Internal Solvas|Capital Function 
+#' return sinqle quoated passed string if not null, return single quoate 'replacement_value' otherwise 
+#' @param fs_id - The scenario id
+#' @return retuns a the passed string surrounded by single quoates if not na or null - otherwise returns unquoted string
+#' @keywords internal
+sqlIsNullStr <- function(string_value, replacement_value = 'NULL') {
+  return(ifelse((is.null(string_value) || is.na(string_value)), replacement_value, paste0("'", string_value, "'")))
+}
+
+
+#' Internal Solvas|Capital Function 
+
+#' Capital convention used to return errors from SP calls. All SP should use this before
+#' using the results of an SP
+#'
+#' Checks the data returned from a SP for a r_status_code column - if it exists and the values is 'CERR' 
+#' then throw an error
+#' Example:
+#'   ...
+#'   data <- sqlQuery(cn, sp, errors=TRUE)
+#'   SPResultCheck(data)
+#'   ...
+#' 
+#' @param data - dataframe returned from a sql call 
+#' @return throws status_message if status is exit
+#' @keywords internal
+SPResultCheck <- function(data) {
+  if (is.null(data[['r_status_code']]) == TRUE || is.null(data$r_status_code))
+    return 
+  if (data$r_status_code  == 'CERR')
+    stop(data$r_status_message)
+  if (data$r_status_code  == 'CWARN')
+    warning(data$r_status_message)
+  
+}
+
 #  Initializes the financial instrument records - must be done on scenarios
 #  that have not been run
 #  
@@ -71,6 +112,7 @@ SPPackageVersionCompatible <- function(connection_string) {
 
 #' Internal Solvas|Capital Function 
 #' gets Solvas|Capital assumptions 
+#' 
 #' @param connection_string  - the string representing the connection string...
 #' @param fs_id The scenario ID
 #' @param tm_desc - description/name of transformation (i.e. '(apply to all)').  the first
@@ -123,16 +165,13 @@ SPFSInitialAccountBalanceGet <- function(connection_string, fs_id, use_account_n
     rownames(pivotData) <- pivotData[,'account_name']
     pivotData$account_name <- NULL
     # add some attributes used on the put
-    attr(pivotData, "table_type") <-'account_name'
-    pivotData_account_number  <- reshape2::dcast(data, account_number ~rp_end_date, value.var = 'account_balance')
-    attr(pivotData, "account_number") <- pivotData_account_number[,'account_number']
+    attr(pivotData, "row_type") <-'account_name'
   } else {
     pivotData  <- reshape2::dcast(data, account_number ~rp_end_date, value.var = 'account_balance')
     rownames(pivotData) <- pivotData[,'account_number']
     pivotData$account_number <- NULL
     # add some attributes used on the put
-    attr(pivotData, "table_type") <- 'account_number'
-    attr(pivotData, "account_name") <- data[,'account_name']
+    attr(pivotData, "row_type") <- 'account_number'
   }
 
   odbcClose(cn)
@@ -148,42 +187,61 @@ SPFSInitialAccountBalanceGet <- function(connection_string, fs_id, use_account_n
 #' @import RODBC
 #' @export
 #' @keywords internal
-SPFSAccountBalancePut <- function(connection_string, fs_id, df) {
-  ###### TODOO...
-  # flatten out
-  #r = reshape2::melt(as.matrix(df))
-  #r = na.omit(r) # remove rows with NA
-  # create variables to add
-  #value_clause = paste0(sprintf("('%s','%s' %s)", r$Var1, r$Var2, r$value), collapse = ",")
-  #value_clause = "('one'),('two')"
-  # note this will not work if there are more than 1,000 items .. need to figure if this is a good approach
-  # still if it is need to batch the insert calls - could be a limitation on R string size as well...
-  #sp = ''
-  #sp <- paste0("
-  #             DECLARE @codeIdTable bc.CodeIdTable;
-  #             INSERT INTO @codeIdTable ([id]) VALUES ",
-  #             value_clause,
-  #             ";
-  #             EXEC [app_r].[Test_Pass_CodeIdTable] @codeIdTable = @codeIdTable", collapse = "")
-  #data <- sqlQuery(cn, sp, errors=TRUE)
-  #odbcClose(cn)
-  #  
-  #cn <- odbcDriverConnect(connection_string)
-  #query <- paste("
-  #  SET NOCOUNT ON;
-  #  IF ( OBJECT_ID('app_r.import_account_balance') IS NOT NULL )
-  #    DELETE app_r.import_account_balance where fs_id = ", fs_id
-  #  )
-  #sqlQuery(cn, gsub("\\s|\\t", " ", query))
-  # tableData <- df
-  # if we use wide data we can melt
-  # check row names 
-  # View(reshape2::melt(as.matrix(tableData))) 
-  # colnames(tableData) <- c("account_number", "rp_end_date", "account_balance")
-  # then use table data
-  #table_name = paste('app_r.import_account_balance')
-  #data <- sqlSave(cn,df,table_name,append = TRUE)
-  #odbcClose(cn)
-  #return(data)
-  return(0)
+SPFSAccountBalancePut <- function(connection_string, fs_id, event_id, df) {
+  row_type = attr(df, "row_type") # get matrix row_type that we will use for (account_name or account_number)
+  key_column = NULL
+  # map the matrix row_type to a either account_description or account_number depending on the type of matrix
+  if (row_type == "account_name")
+    key_column = "account_description"
+  if (row_type == "account_number")
+    key_column = "account_number"
+  
+  if (is.null(key_column))
+    stop(paste0("Cannot map data frame attr 'row_type' value of ", sqlIsNullStr(key_column), " to a key column"))
+  # convert matrix to table 
+  df_flat = reshape2::melt(as.matrix(df))
+  df_flat = na.omit(df_flat) # remove rows with NA
+  # replace NA/NULL with 'actual value' or NULL
+  df_flat$value = sapply(df_flat$value, sqlIsNullStr)
+  
+  insert_sql = ''
+  max_row = nrow(df_flat)
+  
+  # batch up inserts (SQL limits the amount to 1000 per insert)
+  batch_size = 500
+  lower_bound = 1
+  upper_bound = min(lower_bound+batch_size -1, max_row)
+
+  while (lower_bound < max_row)  {
+    value_clause = paste0(sprintf("('%s','%s','%s',%s)",
+                                  df_flat$Var1[lower_bound:min(upper_bound,max_row)],
+                                  "ACCOUNT_BALANCE",
+                                  df_flat$Var2[lower_bound:min(upper_bound,max_row)],
+                                  df_flat$value[lower_bound:min(upper_bound,max_row)]),
+                                collapse = ",")
+    value_clause = paste0("INSERT INTO @account_balances ([", key_column, "], [property_code], [rp_end_date], [property_value]) VALUES ", 
+                          value_clause, "; ")
+    insert_sql = paste0(insert_sql, value_clause)
+    lower_bound = upper_bound +  1;
+    upper_bound = lower_bound + batch_size - 1;
+  }
+  
+  # create the full statement.
+  sp <- paste0("
+               SET NOCOUNT ON 
+               DECLARE @account_balances app_r.AccountPropertyValueTable;",
+               insert_sql,
+               "EXEC [app_r].[FS_Account_Balance_put]",
+               "@fs_id = ", fs_id ,  
+               ",@account_balances = @account_balances",
+               ",@event_id = ", sqlIsNullStr(event_id),
+               collapse = "")
+  sp <- gsub("\\s|\\t", " ", sp) #clean up white space
+  cn <- odbcDriverConnect(connection_string)
+  data <- sqlQuery(cn, sp, errors=TRUE)
+  odbcClose(cn)
+  
+  SPResultCheck(data)
+  
+  return(data)
 }

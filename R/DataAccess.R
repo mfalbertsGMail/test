@@ -117,3 +117,17 @@ DataAccess.FsInitalAccountBalanceGet <- function(da_obj, use_account_name = TRUE
   return(Solvas.Capital.SqlUtility::SPFSInitialAccountBalanceGet(da_obj$connection, da_obj$fs_id, use_account_name))
 }
 
+
+#' Saves the account balances back to the database.  The account_balances parameter should
+#' be the same dataframe from FSInitalAccountBalanceGet. NOTE: This will remove any existing
+#' account balances for this FS_ID and insert the new balances.
+#' 
+#' @param da_obj - Current instance of Solvas|Capital's DataAccess class.
+#' @param account_balances - updated dataframe retured from DataAccess.FsInitalAccountBalanceGet
+#' @export
+DataAccess.FsAccountBalancePut <- function(da_obj, account_balances) {
+  if (da_obj$is_init == 0)
+    Solvas.Capital.SqlUtility::SPInstrumentPropertyLoad(da_obj$connection, da_obj$fs_id)
+  da_obj$is_init = 1
+  return(Solvas.Capital.SqlUtility::SPFSAccountBalancePut(da_obj$connection, da_obj$fs_id, da_obj$event_id, account_balances))
+}
