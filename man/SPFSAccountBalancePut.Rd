@@ -5,7 +5,7 @@
 \title{Internal Solvas|Capital Function 
 Saves Solvas|Capital account balances}
 \usage{
-SPFSAccountBalancePut(connection_string, fs_id, df)
+SPFSAccountBalancePut(connection_string, fs_id, event_id, df)
 }
 \arguments{
 \item{connection_string}{- the string representing the connection string...}

@@ -1,5 +1,5 @@
 
-
+# set 1=1 for local testing emulating call from server
 if (1 == 0) {
   rm(list = ls(pattern = "sc_*")) # remove all variables that begin with sc_
   # declare for local testing of call from server
@@ -74,25 +74,32 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 if (sc_da_connection_status == "success") {
   # do model development here...
 
-  # example: get inital account balances
-  account_balances = DataAccess.FsInitalAccountBalanceGet(sc_da)
-  # save the TODO
-  #DataAccess.FsAccountBalancePut(sc_da, account_balances)
+  # example: get inital account balances by account number
+  print('getting account balances')
+  account_balances = DataAccess.FsInitalAccountBalanceGet(sc_da, FALSE)
+  # change some balance amounts
+  account_balances["2000",] = 2000 # test setting all account balances for account #2000 = 2000
+  account_balances["2100",] = 2100 # test setting all account balances for account #2100 = 2100
+  account_balances["3000",] = 3000 # test setting all account balances for account #3000 = 3000
+  account_balances["1000",1] = 1  # set 99 to first relative period to 1
+  print('updating account balances')
+  # save the updated balances back to the database 
+  DataAccess.FsAccountBalancePut(sc_da, account_balances)
   
   # example: get and print out all assumptions
   assumptions = DataAccess.FsAssumptionsGet(sc_da, NULL, FALSE)
   print(assumptions['BBB_CORPORATE_YIELD_BY_RELATIVE',1])
   print(instruments["HISTORIC_PRINCIPAL_BALANCE_BB_BY_DATE",1])
-  #print(assumptions)
+  print(assumptions)
 
   # example: get and print out interest_rate_effective value for all loans for period 1
   instruments = DataAccess.FiInstrumentGet(sc_da,NULL,1)
   print(instruments['interest_rate_effective'])
   
   # example: get and print out interest_rate_effective value for all loans for effective date 9/30/2014
-  instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
-  print(instruments['interest_rate_effective'])
-
+#  instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
+#  print(instruments['interest_rate_effective'])
+  print('example processing complete')
 } else {
   print(paste("There was an error connecting:", sc_da_connection_status))
 }
