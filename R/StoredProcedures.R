@@ -185,6 +185,7 @@ SPFSInitialAccountBalanceGet <- function(connection_string, fs_id, use_account_n
 #' @param df - data frame of account balances (must match SPFSInitialAccountBalanceGet)
 #' @return result of the SP
 #' @import RODBC
+#' @import stats
 #' @export
 #' @keywords internal
 SPFSAccountBalancePut <- function(connection_string, fs_id, event_id, df) {
