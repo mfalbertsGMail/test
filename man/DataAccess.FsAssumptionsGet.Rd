@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess.FsAssumptionsGet}
 \alias{DataAccess.FsAssumptionsGet}
-\title{Get economic assumptions}
+\title{Get Economic Assumptions data frame}
 \usage{
 DataAccess.FsAssumptionsGet(da_obj, tm_desc = NULL, use_dates = FALSE)
 }
@@ -15,6 +15,9 @@ same description an error message is returned}
 
 \item{use_dates}{- if TRUE then matrix columns will be dates, else periods. default to false}
 }
+\value{
+dataframe
+}
 \description{
-Get economic assumptions
+Gets economic schedules from the transformation data
 }

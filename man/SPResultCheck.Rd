@@ -12,7 +12,7 @@ SPResultCheck(data)
 \item{data}{- dataframe returned from a sql call}
 }
 \value{
-throws status_message if status is exit
+throws status_message if status is CERR
 }
 \description{
 Checks the data returned from a SP for a r_status_code column - if it exists and the values is 'CERR' 

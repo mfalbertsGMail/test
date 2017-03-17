@@ -33,16 +33,16 @@ sqlIsNullStr <- function(string_value, replacement_value = 'NULL') {
 #'   ...
 #' 
 #' @param data - dataframe returned from a sql call 
-#' @return throws status_message if status is exit
+#' @return throws status_message if status is CERR
 #' @keywords internal
 SPResultCheck <- function(data) {
-  if (is.null(data[['r_status_code']]) == TRUE || is.null(data$r_status_code))
-    return 
-  if (data$r_status_code  == 'CERR')
-    stop(data$r_status_message)
-  if (data$r_status_code  == 'CWARN')
-    warning(data$r_status_message)
-  
+  if (is.null(data[['r_status_code']]) == FALSE & is.null(data$r_status_code) == FALSE){
+    if (data$r_status_code  == 'CERR')
+      stop(data$r_status_message)
+    if (data$r_status_code  == 'CWARN')
+      warning(data$r_status_message)
+  }
+  return(TRUE)
 }
 
 #  Initializes the financial instrument records - must be done on scenarios
@@ -89,6 +89,8 @@ SPFIInstrumentGet <- function(connection_string, fs_id,  effective_date, effecti
                 ",@match_LTE = 1")
   data <- sqlQuery(cn, sp, errors=TRUE)
   odbcClose(cn)
+  SPResultCheck(data)
+  
   return(data)
 }
 
@@ -131,6 +133,8 @@ SPFSAssumptionsGet <- function(connection_string, fs_id, tm_desc, use_dates) {
                 "@tm_desc = ", ifelse(is.null(tm_desc), "NULL", paste("'",tm_desc,"'"))
               )
   data <- sqlQuery(cn, sp, errors=TRUE)
+  odbcClose(cn)
+  SPResultCheck(data)
   # reshape so rather than rows of data it is by period in the column
   if (use_dates == TRUE) {
     data <- reshape2::dcast(data, property_code ~date, value.var = 'unified_value')
@@ -139,7 +143,6 @@ SPFSAssumptionsGet <- function(connection_string, fs_id, tm_desc, use_dates) {
   }
   rownames(data) <- data[,'property_code']
   data$property_code <- NULL # remove the $ property code column, since its the rownames now
-  odbcClose(cn)
   return(data)
 }
 
@@ -158,6 +161,8 @@ SPFSInitialAccountBalanceGet <- function(connection_string, fs_id, use_account_n
   sp <- paste("EXEC [app_r].[FS_Initial_Account_Balance_get] ",
               "@fs_id = ",  fs_id)
   data <- sqlQuery(cn, sp, errors=TRUE)
+  odbcClose(cn)
+  SPResultCheck(data)
   
   # code to pivot by rp_end_date
   if (use_account_name == TRUE) {
@@ -174,7 +179,6 @@ SPFSInitialAccountBalanceGet <- function(connection_string, fs_id, use_account_n
     attr(pivotData, "row_type") <- 'account_number'
   }
 
-  odbcClose(cn)
   return(pivotData)
 }
 
@@ -241,7 +245,6 @@ SPFSAccountBalancePut <- function(connection_string, fs_id, event_id, df) {
   cn <- odbcDriverConnect(connection_string)
   data <- sqlQuery(cn, sp, errors=TRUE)
   odbcClose(cn)
-  
   SPResultCheck(data)
   
   return(data)
