@@ -5,6 +5,7 @@ if (1 == 0) {
   # declare for local testing of call from server
   sc_is_running_from_server = 1
   sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=True;database=Internal_Capital_DEV;"
+
   sc_event_id = NULL
   sc_fs_id = 1
 }
@@ -31,7 +32,7 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
 {
   # declare diagnostic variables 
   sc_undefined = "undefined"
-  sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id)
+  sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id, event_id_param = sc_event_id)
   sc_da_connection_status <- DataAccess.ConnectionStatus(sc_da)
   sc_libPath = .libPaths()
   
@@ -66,39 +67,44 @@ if (exists('sc_is_running_from_server') && sc_is_running_from_server == 1)
   sc_connection_string = "Driver={Sql Server};server=(local);trusted_connection=Yes;database=Internal_Capital_DEV;"
   sc_event_id = NULL
   sc_fs_id = 1
-  sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id)
+  sc_da <- DataAccess(connection_string_param = sc_connection_string, fs_id_param = sc_fs_id,  event_id_param = sc_event_id)
   sc_da_connection_status <- DataAccess.ConnectionStatus(sc_da)
 
 }
  # Example...
 if (sc_da_connection_status == "success") {
+  
   # do model development here...
 
   # example: get inital account balances by account number
   print('getting account balances')
   account_balances = DataAccess.FsInitalAccountBalanceGet(sc_da, FALSE)
-  # change some balance amounts
-  account_balances["2000",] = 2000 # test setting all account balances for account #2000 = 2000
-  account_balances["2100",] = 2100 # test setting all account balances for account #2100 = 2100
-  account_balances["3000",] = 3000 # test setting all account balances for account #3000 = 3000
-  account_balances["1000",1] = 1  # set 99 to first relative period to 1
-  print('updating account balances')
-  # save the updated balances back to the database 
-  DataAccess.FsAccountBalancePut(sc_da, account_balances)
+  print(account_balances["2000",])
   
   # example: get and print out all assumptions
+  print('getting scenario assumptions')
   assumptions = DataAccess.FsAssumptionsGet(sc_da, NULL, FALSE)
   print(assumptions['BBB_CORPORATE_YIELD_BY_RELATIVE',1])
-  print(instruments["HISTORIC_PRINCIPAL_BALANCE_BB_BY_DATE",1])
+  print(assumptions["HISTORIC_PRINCIPAL_BALANCE_BB_BY_DATE",1])
   print(assumptions)
 
   # example: get and print out interest_rate_effective value for all loans for period 1
   instruments = DataAccess.FiInstrumentGet(sc_da,NULL,1)
   print(instruments['interest_rate_effective'])
+
+  # change some balance amounts
+  account_balances["2000",] = 2000 # example setting all account balances for account #2000 = 2000
+  account_balances["2100",] = 2100 # example setting all account balances for account #2100 = 2100
+  account_balances["3000",] = 3000 # example setting all account balances for account #3000 = 3000
+  account_balances["1000",1] = 99  # example set 99 to first relative period to 1
   
+  # save the updated balances back to the database 
+  print('updating account balances')
+  DataAccess.FsAccountBalancePut(sc_da, account_balances)
+
   # example: get and print out interest_rate_effective value for all loans for effective date 9/30/2014
-#  instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
-#  print(instruments['interest_rate_effective'])
+  #  instruments = DataAccess.FiInstrumentGet(sc_da,'9/30/2014',NULL)
+  #  print(instruments['interest_rate_effective'])
   print('example processing complete')
 } else {
   print(paste("There was an error connecting:", sc_da_connection_status))

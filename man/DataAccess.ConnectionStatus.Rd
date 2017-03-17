@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess.ConnectionStatus}
 \alias{DataAccess.ConnectionStatus}
-\title{Returns the connection status}
+\title{Returns the current connection status}
 \usage{
 DataAccess.ConnectionStatus(da_obj)
 }

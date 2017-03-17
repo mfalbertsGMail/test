@@ -2,9 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess.FsAccountBalancePut}
 \alias{DataAccess.FsAccountBalancePut}
-\title{Saves the account balances back to the database.  The account_balances parameter should
-be the same dataframe from FSInitalAccountBalanceGet. NOTE: This will remove any existing
-account balances for this FS_ID and insert the new balances.}
+\title{Updates the database Account Balances for the scenario}
 \usage{
 DataAccess.FsAccountBalancePut(da_obj, account_balances)
 }

@@ -2,9 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess.FsInitalAccountBalanceGet}
 \alias{DataAccess.FsInitalAccountBalanceGet}
-\title{Get initial account balances for the scenario (based on the scenarios entity)
-Return a dataframe of all the initial account balances. The dataframe will contain all accounts 
-and all dates for the reporting period.  NA will be used when no account balance exists.}
+\title{Gets the INITIAL Account Balance data frame for the scenario}
 \usage{
 DataAccess.FsInitalAccountBalanceGet(da_obj, use_account_name = TRUE)
 }
@@ -13,8 +11,12 @@ DataAccess.FsInitalAccountBalanceGet(da_obj, use_account_name = TRUE)
 
 \item{use_account_name}{if TRUE will use account_name, false will use account_number}
 }
+\value{
+dataframe
+}
 \description{
-Get initial account balances for the scenario (based on the scenarios entity)
-Return a dataframe of all the initial account balances. The dataframe will contain all accounts 
+Get initial account balances for the scenario.  The inital account balance is a direct copy
+of the entity's account balances.
+Returns a dataframe of all the initial account balances. The dataframe will contain all accounts 
 and all dates for the reporting period.  NA will be used when no account balance exists.
 }

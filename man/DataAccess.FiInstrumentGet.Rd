@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataAccess.R
 \name{DataAccess.FiInstrumentGet}
 \alias{DataAccess.FiInstrumentGet}
-\title{Get financial instruments}
+\title{Get Financial Instruments data frame as of an effective date or period}
 \usage{
 DataAccess.FiInstrumentGet(da_obj, effective_date = NULL,
   effective_period = NULL)
@@ -15,10 +15,10 @@ DataAccess.FiInstrumentGet(da_obj, effective_date = NULL,
 \item{effective_period}{- The period to use for schedule data types (1=first period)}
 }
 \value{
-Data frame containing the financial instrument data
+dataframe
 }
 \description{
-Takes a DataAccess da_obj and effective_date or effective_period and returns a DataTable
+Takes a DataAccess da_obj and effective_date or effective_period and returns a data frame
 with the instruments.  Properties that are schedules are coalesced 
 to a single value based on the effective_date or effective_period. 
 NOTE: EITHER effective_date or effective_period must be populated, the other one must be NULL
