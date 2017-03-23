@@ -1,6 +1,6 @@
 Package: Solvas.Capital.SqlUtility
 Title: Solvas.Capital.SqlUtility
-Version: 0.0.0.9002
+Version: 0.3.1.0000
 Authors@R: person("Mark","Alberts", email="malberts@deloitte.com", role=c("aut","cre"))
 Author: Mark Alberts [aut, cre]
 Maintainer: Mark Alberts <malberts@deloitte.com>

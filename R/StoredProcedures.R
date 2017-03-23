@@ -137,9 +137,9 @@ SPFSAssumptionsGet <- function(connection_string, fs_id, tm_desc, use_dates) {
   SPResultCheck(data)
   # reshape so rather than rows of data it is by period in the column
   if (use_dates == TRUE) {
-    data <- reshape2::dcast(data, property_code ~date, value.var = 'unified_value')
+    data <- reshape2::dcast(data, property_code ~effective_date, value.var = 'unified_value')
   } else {
-    data <- reshape2::dcast(data, property_code ~period, value.var = 'unified_value')
+    data <- reshape2::dcast(data, property_code ~effective_period, value.var = 'unified_value')
   }
   rownames(data) <- data[,'property_code']
   data$property_code <- NULL # remove the $ property code column, since its the rownames now
