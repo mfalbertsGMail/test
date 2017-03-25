@@ -34,9 +34,6 @@ sqlIsNullStr <- function(string_value, replacement_value = 'NULL') {
 #' 
 #' @param data - dataframe returned from a sql call 
 #' @return throws status_message if status is CERR
-#' Try importing these packages here - they seem to be required by some package I'm using...
-#' @import plyr
-#' @import stringr
 #' @keywords internal
 SPResultCheck <- function(data) {
   if (is.null(data[['r_status_code']]) == FALSE & is.null(data$r_status_code) == FALSE){

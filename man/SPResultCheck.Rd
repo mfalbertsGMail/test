@@ -13,7 +13,6 @@ SPResultCheck(data)
 }
 \value{
 throws status_message if status is CERR
-Try importing these packages here - they seem to be required by some package I'm using...
 }
 \description{
 Checks the data returned from a SP for a r_status_code column - if it exists and the values is 'CERR' 
